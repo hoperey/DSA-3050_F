@@ -1,298 +1,370 @@
-# Student Performance & Retention Analytics Project
+# Student Performance & Retention Analytics
 
-## Project Overview
+## Problem Statement
 
-This repository presents a comprehensive Power BI–based analytical solution developed by **Group F** using the **Open University Learning Analytics Dataset (OULAD)**. The dataset contains detailed records of student demographics, virtual learning environment (VLE) interactions, and academic assessments collected from distance-learning courses.
+Many students in online learning environments fail or withdraw from courses, leading to reduced institutional performance, inefficient resource usage, and poor academic outcomes. Institutions often lack real-time analytical tools to identify at-risk students and understand the factors influencing performance.
 
-The original dataset includes over **32,000 students** and more than **10.6 million interaction records** from the virtual learning platform. For this project, a filtered cohort of approximately **29,000 students** was used to focus the analysis on meaningful academic patterns and retention behaviors.
+Manual analysis methods are insufficient when dealing with large-scale datasets containing millions of interaction records. This makes it difficult to detect meaningful patterns and intervene early.
 
-The project aims to identify the **demographic, behavioral, and academic drivers of student success**, while supporting institutional decision-making through data-driven insights.
-
-### The Challenge
-
-Institutional data reveals a significant performance gap:
-
-- Only **36%** of students achieve a **Pass or Distinction**
-- Approximately **33%** of students **Withdraw** before completion
-- A remaining proportion fail to meet required academic outcomes
-
-This project addresses the need for **early intervention strategies** and improved academic support systems using analytical modeling and visualization.
+This project addresses this gap by developing an interactive Power BI dashboard that enables stakeholders to monitor student engagement, identify risk patterns, and support data-driven decision-making to improve student retention and success rates.
 
 ---
 
-# Technical Architecture & Data Modeling
+# Business Questions
 
-The project is built using a **Star Schema architecture** designed to efficiently manage and analyze large-scale datasets consisting of over **10.6 million interaction records**.
+This project was designed to answer the following key questions:
 
-## Star Schema Design
-
-### Dimension Tables
-
-- `studentInfo` — Contains student demographic attributes  
-- `vle` — Stores virtual learning resource information  
-- `Dim_Date` — Custom date dimension created for time intelligence  
-
-### Fact Tables
-
-- `studentVle` — Records student interactions with online resources  
-- `studentAssessment` — Stores assessment submission and performance data  
-
-This design ensures:
-
-- Faster analytical queries  
-- Improved data organization  
-- Scalable reporting performance  
+1. What demographic factors influence student performance and retention?
+2. How does academic workload affect student outcomes?
+3. What role does Virtual Learning Environment (VLE) engagement play in student success?
+4. Which students are at risk of failing or withdrawing?
+5. How can institutions use predictive insights to improve student completion rates?
+6. What interventions can be implemented to reduce dropout rates?
 
 ---
 
-# ETL Process (Power Query)
+# Data Sources (with Links)
 
-The dataset underwent extensive transformation through an **Extract–Transform–Load (ETL)** pipeline consisting of more than **10 major transformations** to ensure data quality and usability.
+This project uses the **Open University Learning Analytics Dataset (OULAD)**, a publicly available dataset containing student demographics, engagement data, and assessment performance.
+
+### Primary Dataset
+
+Open University Learning Analytics Dataset (OULAD)  
+Kaggle Source:  
+https://www.kaggle.com/datasets/anlgrbz/student-demographics-online-education-dataoulad
+
+### Key Tables Used
+
+- **studentInfo**
+  - Demographic details such as age, gender, region, disability status, and education level.
+
+- **studentVle**
+  - Records daily student interactions with online learning resources.
+
+- **studentAssessment**
+  - Stores assessment scores, submission timing, and academic performance.
+
+- **vle**
+  - Contains metadata about digital learning resources.
+
+- **assessments**
+  - Provides information about assessment weights and types.
+
+- **courses**
+  - Stores module and presentation details.
+
+These datasets collectively contain:
+
+- ~29,000 students (filtered cohort)
+- Over 10.6 million VLE interaction records
+- Multiple academic assessment records
+
+This dataset structure supports detailed analysis of learning behavior and performance patterns. :contentReference[oaicite:0]{index=0}  
+
+---
+
+# Data Model Description
+
+A **Star Schema data model** was implemented to optimize performance and improve analytical efficiency.
+
+## Dimension Tables
+
+- studentInfo  
+  Contains student demographic attributes.
+
+- vle  
+  Stores information about digital learning resources.
+
+- Dim_Date (Created using DAX)  
+  Enables time-based analysis and trend visualization.
+
+## Fact Tables
+
+- studentVle  
+  Stores daily interaction activity for students.
+
+- studentAssessment  
+  Contains student assessment submission and score data.
 
 ## Key Transformations
 
-### Data Imputation
+The data preparation process included:
 
-Missing values in assessment scores and weights were replaced with **0** to prevent inaccurate calculations and maintain dataset completeness.
+- Replacing null values in assessment weights and scores.
+- Converting age bands into numeric ranges.
+- Splitting IMD deprivation bands into numeric values.
+- Creating categorical variables such as:
+  - performance_category
+  - age_category
+  - submission_period
+- Creating standardized date structures using DAX.
+- Establishing one-to-many relationships between dimension and fact tables.
 
-### Attribute Standardization
-
-Categorical variables such as **Age Bands** and **IMD (Index of Multiple Deprivation) Bands** were converted from text ranges into numerical minimum and maximum values. This allowed the variables to be used in statistical analysis and aggregation.
-
-### Temporal Normalization
-
-A custom **DAX Date Table (`Dim_Date`)** was created to convert relative day values into standardized calendar dates. This enabled time-series analysis and monthly trend tracking.
-
-### Relationship Optimization
-
-One-to-many relationships were established between dimension and fact tables:
-
-- `studentInfo` to `studentVle`  
-- `studentInfo` to `studentAssessment`  
-- `vle` to `studentVle`  
-
-These relationships improved performance and ensured data integrity.
+These steps ensured a clean, structured model suitable for large-scale reporting and analysis. :contentReference[oaicite:1]{index=1}  
 
 ---
 
-# Dashboard Insights & Business Intelligence
+# DAX Highlights (3 Complex Measures)
 
-The Power BI dashboard was designed to answer key institutional questions through structured visualization pages.
+## 1. At-Risk Students Measure
 
----
+This measure identifies students who are likely to fail or withdraw based on engagement and performance thresholds.
 
-## Executive Summary: Performance Monitoring
+Logic:
 
-**Business Question:**  
-Are institutional retention targets being met?
-
-### Key Performance Indicators
-
-- Pass Rate: **72%**
-- Completion Rate: **36%**
-- Withdrawal Rate: **33%**
-
-### Trend Analysis
-
-The dashboard visualizes **Average Score** alongside **Submission Volume** across time.
-
-**Key Finding**
-
-Scores initially average around **80**, but gradually decline as submission workload increases. This pattern closely aligns with an increase in late submissions, suggesting workload-related performance fatigue.
-
----
-
-## Digital Engagement: Virtual Learning Analysis
-
-**Business Question:**  
-Which digital resources drive student success?
-
-### Visual Components
-
-- VLE Activity Treemap  
-- Resource usage distribution  
-
-### Observed Resource Types
-
-- Forumng (discussion forums)  
-- Subpages  
-- PDF resources  
-
-**Key Finding — Early Engagement Effect**
-
-Students who interact with learning materials **before the module start date** demonstrate:
-
-- Higher engagement levels  
-- Lower withdrawal risk  
-
-Early participation acts as a protective factor against attrition.
-
----
-
-## Key Influencers: AI-Based Analysis
-
-**Business Question:**  
-What are the strongest predictors of student success?
-
-Using Power BI’s **Key Influencers tool**, the analysis identified the following patterns:
-
-### High Performance Drivers
-
-Students categorized within the **Older age group (55+)** were found to be:
-
-- **1.58 times more likely** to achieve high academic scores.
-
-### Risk Drivers
-
-Students at highest academic risk included:
-
-- Students with **No Formal Qualifications**  
-- Students attempting **450 or more credits**
-
-These groups demonstrated significantly higher withdrawal likelihood.
-
----
-
-## Drill-Through Analysis: Regional Risk Monitoring
-
-**Business Question:**  
-How can interventions be targeted geographically?
-
-A dedicated regional drill-through page focuses on the **East Anglian Region**, allowing advisors to:
-
-- Identify individual student IDs  
-- Review credit loads  
-- Monitor engagement scores  
-
-This enables targeted academic interventions at a localized level.
-
----
-
-# Advanced DAX Measures
-
-Several custom DAX measures were developed to support dynamic analysis and predictive insights.
-
-## Core Measures
-
-### At-Risk Flag
-
-This measure identifies students who meet both conditions:
+Students are flagged as **At-Risk** when:
 
 - Average Score < 40  
+AND  
 - VLE Clicks < 100  
 
-These students are flagged as high-risk candidates requiring intervention.
+Purpose:
+
+- Enables early intervention
+- Identifies students needing academic support
+- Supports retention planning
 
 ---
 
-### Success Likelihood
+## 2. Completion Rate Measure
 
-This AI-based metric estimates the probability of achieving high academic performance using demographic and behavioral indicators.
+This measure calculates the percentage of students who successfully completed their course.
+
+Logic:
+
+Completion Rate =  
+(Number of students with Pass or Distinction) ÷ (Total Students)
+
+Purpose:
+
+- Tracks institutional performance
+- Supports monitoring of retention targets
+- Provides KPI visualization in dashboards
 
 ---
 
-### What-If Scenario Analysis
+## 3. What-If Retention Scenario
 
-A dynamic parameter was created to simulate improvements in retention performance.
+A dynamic parameter allowing simulation of retention improvement scenarios.
 
-Simulation Range:
+Range:
 
-- **5% to 15% retention improvement**
+5% to 15% improvement
 
-This feature supports strategic planning and policy simulation.
+Purpose:
+
+- Supports strategic planning
+- Allows institutions to evaluate potential outcomes
+- Enables data-driven policy testing
+
+These advanced DAX calculations enhance the analytical capabilities of the dashboard and support predictive insights. :contentReference[oaicite:2]{index=2}  
+
+---
+
+# Dashboard Pages Overview
+
+The dashboard contains multiple interactive pages designed for layered analysis.
+
+## Page 1: Executive Summary
+
+Provides a high-level overview of student performance.
+
+Includes:
+
+- KPI cards
+- Completion rate
+- Performance distribution
+- Trend charts
+
+Purpose:
+
+Allows stakeholders to quickly assess overall program performance.
+
+---
+
+## Page 2: Analytical Deep Dive
+
+Explores relationships between student demographics and academic performance.
+
+Includes:
+
+- Scatter plots
+- Bar charts
+- Matrix tables
+
+Purpose:
+
+Supports detailed demographic and academic analysis.
+
+---
+
+## Page 3: Engagement & Geographic Analysis
+
+Analyzes student activity and location-based patterns.
+
+Includes:
+
+- Engagement trend charts
+- Geographic maps
+- Activity distributions
+
+Purpose:
+
+Identifies engagement trends across regions.
+
+---
+
+## Page 4: Drill-Through & Intervention Planning
+
+Provides detailed analysis at individual student level.
+
+Includes:
+
+- Drill-through tables
+- Scenario analysis
+- Student-level metrics
+
+Purpose:
+
+Supports personalized intervention planning.
+
+---
+
+## Page 5: Predictive Insights
+
+Uses AI-powered tools to identify performance drivers.
+
+Includes:
+
+- Key Influencers visualization
+- Risk pattern detection
+
+Purpose:
+
+Supports predictive decision-making and early risk detection. :contentReference[oaicite:3]{index=3}  
+
+---
+
+# Key Insights
+
+The analysis produced several critical findings:
+
+## Demographic Insights
+
+- Older students consistently outperform younger students.
+- Students with higher prior education levels achieve better outcomes.
+- Socio-economic background influences engagement patterns.
+
+---
+
+## Academic Insights
+
+- Students taking excessive credit loads show lower performance.
+- Balanced workloads correlate with improved academic results.
+- Assessment scores gradually decline across the module timeline.
+
+---
+
+## Engagement Insights
+
+- Early engagement strongly predicts success.
+- Students interacting before the module start perform significantly better.
+- Irregular engagement increases withdrawal risk.
+
+---
+
+## At-Risk Indicators
+
+Students most likely to fail or withdraw include:
+
+- Students with late submissions
+- Students with low early engagement
+- Students with limited prior education
+
+These insights enable institutions to identify struggling students early and provide targeted support. :contentReference[oaicite:4]{index=4}  
 
 ---
 
 # Strategic Recommendations
 
-Based on the analytical findings, the following institutional strategies are recommended:
+Based on the findings, the following strategies are recommended:
 
-## Workload Management
+## 1. Early Warning Systems
 
-Introduce a **credit load soft cap**:
+Identify students showing:
 
-- Recommended maximum: **300 credits**
-- Mandatory counseling for students exceeding this threshold
+- Low engagement
+- Low assessment scores
 
-Purpose:
-
-Reduce academic overload and prevent performance decline.
+Implement automated alerts for early intervention.
 
 ---
 
-## Early Intervention Strategy
+## 2. Targeted Support Programs
 
-Deploy automated notifications for students who:
+Provide academic support for:
 
-- Show **zero VLE activity within the first week**
-
-Purpose:
-
-Encourage early engagement and prevent withdrawal behavior.
+- Students with lower education levels
+- Students with poor early performance
 
 ---
 
-## Equity Gap Reduction
+## 3. Engagement Incentives
 
-Develop **bridging modules** for students entering without formal academic qualifications.
+Encourage early participation through:
 
-Purpose:
-
-Close the approximately **30% completion gap** among underprepared students.
-
----
-
-## Content Optimization
-
-Review and optimize learning resources using engagement data.
-
-Recommended actions:
-
-- Remove low-engagement materials  
-- Expand high-engagement content  
-- Increase use of interactive forum-based learning  
+- Pre-module orientation
+- Interactive learning tools
 
 ---
 
-# Technologies Used
+## 4. Workload Management
 
-- Power BI  
-- Power Query  
-- DAX (Data Analysis Expressions)  
-- Excel  
-- Star Schema Data Modeling  
-- AI-Based Key Influencers Analysis  
+Advise students against excessive credit loads.
+
+Introduce recommended limits based on performance data.
 
 ---
 
-# Project Team (Group F)
+## 5. Continuous Monitoring
 
-- Halima Mohamed  
-- Fortune Nawate  
-- Yar Deng Kuot  
-- Faith Mwangi  
-- Wilson Muhia  
-- Hope Kimandi  
+Deploy real-time dashboards to:
 
----
+- Track engagement patterns
+- Detect risk indicators
+- Support informed decision-making
 
-# Academic Context
-
-Developed for:
-
-United States International University–Africa (USIU Africa)  
-Course: Data Visualization & Analytics  
-Submission Date: April 2026  
+These recommendations aim to improve student retention and overall academic success. :contentReference[oaicite:5]{index=5}  
 
 ---
 
-# Project Impact
+# Power BI Public Link
 
-This project demonstrates how large-scale learning analytics can be transformed into:
+Access the live dashboard here:
 
-- Early warning systems  
-- Retention improvement strategies  
-- Personalized academic support frameworks  
+https://app.powerbi.com/groups/me/reports/ecb1cd7b-6b01-4f3f-ae26-d5b7fbdb5391/4ae4f12132ce046e6cea?experience=power-bi
 
-The analytical model developed provides a scalable foundation for data-driven academic decision-making.
+---
+
+# Team Members (Group F)
+Hope Kimandi — Data Cleaning & Transformation  
+Faith Mwangi — Data Cleaning & Transformation 
+Halima Mohamed — Data Modeling   
+Wilson Muhia — DAX Measures Development 
+Fortune Nawate — Dashboard Development  
+Yar Deng Kuot — Readme   
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
 
