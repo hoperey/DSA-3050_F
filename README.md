@@ -342,8 +342,7 @@ These recommendations aim to improve student retention and overall academic succ
 
 Access the live dashboard here:
 
-https://app.powerbi.com/groups/me/reports/ecb1cd7b-6b01-4f3f-ae26-d5b7fbdb5391/4ae4f12132ce046e6cea?experience=power-bi
-
+https://app.powerbi.com/view?r=eyJrIjoiZWI4NDAzYmItODk3Zi00ODRmLWExMjUtY2U2NjJlYzY2MGFkIiwidCI6IjE2ZDgzZWU2LTI1NGEtNDY5ZC1hNmNjLTU0ZTJjYTIzMTNlNyIsImMiOjh9
 ---
 
 # Team Members (Group F)
