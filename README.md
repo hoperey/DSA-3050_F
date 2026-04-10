@@ -347,9 +347,11 @@ https://app.powerbi.com/view?r=eyJrIjoiZWI4NDAzYmItODk3Zi00ODRmLWExMjUtY2U2NjJlY
 
 # Team Members (Group F)
 Hope Kimandi — Data Cleaning & Transformation  
-Faith Mwangi — Data Cleaning & Transformation 
+Faith Mwangi — Data Cleaning & Transformation
+
 Halima Mohamed — Data Modeling   
 Wilson Muhia — DAX Measures Development 
+
 Fortune Nawate — Dashboard Development  
 Yar Deng Kuot — Readme   
 ---
