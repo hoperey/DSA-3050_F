@@ -353,7 +353,8 @@ Halima Mohamed — Data Modeling
 Wilson Muhia — DAX Measures Development 
 
 Fortune Nawate — Dashboard Development  
-Yar Deng Kuot — Readme   
+Yar Deng Kuot — Readme
+
 ---
 
 
